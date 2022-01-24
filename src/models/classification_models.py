@@ -22,16 +22,17 @@ from sklearn.linear_model import LogisticRegression
 # performance metrics
 from sklearn.metrics import classification_report
 
-from visualization.plot_metrics import ROCPlot, PrecisionRecallPlot
+from src.visualization.plot_metrics import ROCPlot, PrecisionRecallPlot
 
 
-def bayes_search_fit(search, param_grid, X_train, y_train):
+def bayes_search_fit(search, X_train, y_train):
     logging.info("Performing grid search...")
     search.fit(X_train, y_train)
     logging.info("Best score: %0.3f" % search.best_score_)
     print("Best parameters set:")
     best_parameters = search.best_estimator_.get_params()
 
+    param_grid = search.get_params()['search_spaces']
     for param_name in sorted(param_grid.keys()):
         print("\t%s: %r" % (param_name, best_parameters[param_name]))
 
@@ -45,8 +46,10 @@ def bayes_search_eval(search, X_test, y_test):
     logging.info(classification_report(y_test, y_pred))
 
     roc = ROCPlot(y_test, y_pred_prob)
+    roc.roc_calc()
     roc.roc_plot()
     pr = PrecisionRecallPlot(y_test, y_pred_prob)
+    pr.precision_recall_calc()
     pr.precision_recall_plot()
 
     return
@@ -67,7 +70,7 @@ def config_naive_bayes():
     }
 
     search = BayesSearchCV(estimator=pipeline, search_spaces=param_grid,
-                           n_iter=32, n_jobs=5, verbose=1, random_state=21)
+                           n_iter=5, n_jobs=5, verbose=1, random_state=21)
 
     logging.info("pipeline:", [name for name, _ in pipeline.steps])
     logging.info("parameters:")

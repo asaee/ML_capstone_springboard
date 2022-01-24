@@ -1,6 +1,7 @@
+from concurrent.futures import process
 import logging
 import pandas as pd
-from features.build_features import data_preparation
+from src.features.build_features import data_preparation
 from classification_models import config_naive_bayes, config_logistic_regression, bayes_search_fit, bayes_search_eval
 
 
@@ -15,8 +16,8 @@ def train_classifier(filename, clf="nb"):
                                                         test_size=0.3,
                                                         random_state=21)
 
-    bs, param_grid = classifiers[clf]
-    bs = bayes_search_fit(bs, param_grid, X_train, y_train)
+    bs = classifiers[clf]
+    bs = bayes_search_fit(bs, X_train, y_train)
     bayes_search_eval(bs, X_test, y_test)
     logging.info('The data analysis pipeline has terminated')
 

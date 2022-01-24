@@ -4,7 +4,7 @@ from itertools import cycle
 from sklearn.metrics import precision_recall_curve, PrecisionRecallDisplay
 from sklearn.metrics import average_precision_score
 from sklearn.metrics import roc_curve, auc
-from features.build_features import onehot_encoder
+from src.features.build_features import onehot_encoder
 
 
 class ROCPlot:
@@ -27,7 +27,7 @@ class ROCPlot:
     def roc_plot(self):
         lw = 2
 
-        fig = plt.figure(figsize=(10, 30))
+        fig = plt.figure(figsize=(10, 15))
         for i in range(len(self.categories)):
             ax = fig.add_subplot(6, 2, i+1)
             ax.plot(self.fpr[i], self.tpr[i], color='r',

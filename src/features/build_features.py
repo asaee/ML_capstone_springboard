@@ -48,8 +48,8 @@ def data_preparation(df, test_size, random_state=None):
     df = merge_tags(df)
 
     X_train, X_test, y_train, y_test = train_test_split(
-        df.drop(columns='topic_area').values,
-        df['topic_area'].values,
+        df['content'].tolist(),
+        df['tags'].values,
         test_size=test_size,
         random_state=random_state
     )
