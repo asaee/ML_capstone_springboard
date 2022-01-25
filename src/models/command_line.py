@@ -1,3 +1,4 @@
+from email.policy import default
 import sys
 import logging
 import click
@@ -14,12 +15,19 @@ logging.basicConfig(
 
 
 @click.command()
+@click.option('--modeltype', default='DL', prompt='Model type', help='DL or ML')
+@click.option('--subtype', default='cnn', prompt='Model sub-type', help='nb, lr, cnn or lstm')
 @click.option('--filename',
               type=click.Path(exists=True),
               prompt='Path to the CSV file',
               help='Path to the CSV file')
-def articles_analysis(filename):
-    train_classifier(filename)
+def articles_analysis(filename, modeltype, subtype):
+    if modeltype == 'ML':
+        train_classifier(filename, clf=subtype)
+    elif modeltype == 'DL' and subtype == 'cnn':
+        train_cnn(filename)
+    elif modeltype == 'DL' and subtype == 'lstm':
+        train_lstm(filename)
 
 
 if __name__ == '__main__':

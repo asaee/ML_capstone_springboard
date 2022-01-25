@@ -70,7 +70,7 @@ def config_naive_bayes():
     }
 
     search = BayesSearchCV(estimator=pipeline, search_spaces=param_grid,
-                           n_iter=5, n_jobs=5, verbose=1, random_state=21)
+                           n_iter=32, n_jobs=5, verbose=1, random_state=21)
 
     logging.info("pipeline:", [name for name, _ in pipeline.steps])
     logging.info("parameters:")
