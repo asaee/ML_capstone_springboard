@@ -74,7 +74,7 @@ def tokenize_text_deeplearning(df, maxlen=700):
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(X_train)
     # saving the Tokenizer
-    with open('tokenizer.pickle', 'wb') as handle:
+    with open('.\lib\tokenizer.pickle', 'wb') as handle:
         pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     X_train = tokenizer.texts_to_sequences(X_train)

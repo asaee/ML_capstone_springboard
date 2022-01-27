@@ -10,7 +10,7 @@ from tensorflow.keras import losses
 from keras.models import Sequential, Model
 
 
-def cnn_model_config(optimizer, maxlen, vocab_size):
+def cnn_model_config(maxlen, vocab_size):
     embedding_dim = 50
 
     text_input = layers.Input(shape=(maxlen,), name='docs')
@@ -59,7 +59,7 @@ def cnn_model_builder(num_train_steps, vocab_size, maxlen):
                                               num_warmup_steps=num_warmup_steps,
                                               optimizer_type='adamw')
 
-    cnn_model = cnn_model_config(optimizer, maxlen, vocab_size)
+    cnn_model = cnn_model_config(maxlen, vocab_size)
     cnn_model.compile(optimizer=optimizer,
                       loss='sparse_categorical_crossentropy',
                       metrics=['accuracy'])
