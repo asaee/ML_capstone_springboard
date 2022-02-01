@@ -17,37 +17,42 @@ def get_DL_data():
     return corpus
 
 
-def test_process_input_text(get_DL_data):
+@pytest.fixture
+def get_tokenizer():
     path_tokenizer = os.path.join(os.path.dirname(
         __file__), "../src/lib/tokenizer.pickle")
     with open(path_tokenizer, 'rb') as handle:
         loaded_tokenizer = pickle.load(handle)
     assert isinstance(loaded_tokenizer, keras.preprocessing.text.Tokenizer)
 
-    corpus = get_DL_data['content'].values
-    processed_corpus = process_input_text(
-        corpus, path_tokenizer=path_tokenizer)
-
-    assert isinstance(processed_corpus, np.ndarray)
-    assert processed_corpus.shape == (get_DL_data.shape[0], 700)
+    return loaded_tokenizer
 
 
-def test_predict_label_prob(get_DL_data):
-    path_tokenizer = os.path.join(os.path.dirname(
-        __file__), "../src/lib/tokenizer.pickle")
-
-    corpus = get_DL_data['content'].values
-    processed_corpus = process_input_text(
-        corpus, path_tokenizer=path_tokenizer)
-
+@pytest.fixture
+def get_model():
     path_model = os.path.join(os.path.dirname(
         __file__), "../src/lib/cnn_model")
 
     loaded_model = load_model(path_model, compile=False)
     assert isinstance(loaded_model, keras.engine.functional.Functional)
 
+    return loaded_model
+
+
+def test_process_input_text(get_DL_data, get_tokenizer):
+    processed_corpus = process_input_text(
+        get_DL_data['content'].values, get_tokenizer)
+
+    assert isinstance(processed_corpus, np.ndarray)
+    assert processed_corpus.shape == (get_DL_data.shape[0], 700)
+
+
+def test_predict_label_prob(get_DL_data, get_tokenizer, get_model):
+    processed_corpus = process_input_text(
+        get_DL_data['content'].values, get_tokenizer)
+
     label_pred_prob = predict_label_prob(
-        processed_corpus, path_model=path_model)
+        processed_corpus, get_model)
 
     assert isinstance(label_pred_prob, np.ndarray)
     assert label_pred_prob.shape == (get_DL_data.shape[0], 5)
