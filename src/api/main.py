@@ -1,18 +1,39 @@
-import pickle5 as pickle
-from keras.models import load_model
+import pickle
+from keras.models import model_from_json
+from keras.preprocessing.sequence import pad_sequences
 from fastapi import FastAPI
-from src.models.predict_model import *
 
 
 def load_model_tokenizer():
-    path_tokenizer = "../lib/tokenizer.pickle"
+    path_tokenizer = "./lib/tokenizer.pickle"
     with open(path_tokenizer, 'rb') as handle:
         tokenizer = pickle.load(handle)
 
-    path_model = "../lib/cnn_model"
-    model = load_model(path_model, compile=False)
+    path_model = "./lib/model/cnn_model_config.json"
+    # load json and create model
+    json_file = open(path_model, 'r')
 
-    return tokenizer, model
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = model_from_json(loaded_model_json)
+
+    # load weights into new model
+    loaded_model.load_weights("./lib/model/cnn_model_weights.h5")
+
+    return tokenizer, loaded_model
+
+
+def process_input_text(corpus, tokenizer, maxlen: int = 700):
+    corpus = tokenizer.texts_to_sequences(corpus)
+    corpus = pad_sequences(corpus, padding='post', maxlen=maxlen)
+
+    return corpus
+
+
+def predict_label_prob(corpus, model_cnn):
+    label_pred_prob = model_cnn.predict(corpus)
+
+    return label_pred_prob
 
 
 app = FastAPI()

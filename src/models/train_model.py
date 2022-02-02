@@ -102,3 +102,15 @@ def train_lstm(filename):
     plot_neuralnet_history(history_lstm_model)
     logging.info('The deep learning data analysis pipeline has terminated')
     return
+
+
+def save_keras_model(model):
+    # serialize model to JSON
+    model_json = model.to_json()
+    with open("../lib/model/model_config.json", "w") as json_file:
+        json_file.write(model_json)
+
+    # serialize weights to HDF5
+    model.save_weights("../lib/model/model_weights.h5")
+
+    return
