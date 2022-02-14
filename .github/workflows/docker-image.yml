@@ -18,8 +18,11 @@ jobs:
       with:
           lfs: true
     
-    - run: git lfs install --local
+    - run: git lfs pull
     
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      
     # setup Docker buld action
     - name: Set up Docker Buildx
       id: buildx
@@ -34,5 +37,6 @@ jobs:
     - name: Build image and push to Docker Hub
       uses: docker/build-push-action@v2
       with:
+        context: .
         push: true
         tags: rasoulasaee/app:latest
