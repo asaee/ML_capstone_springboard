@@ -10,9 +10,9 @@ LABEL maintainer="Rasoul Asaee <s.a.asaee@gmail.com>" \
 WORKDIR /app
 
 # Copy the library and the app into the container at /app
-COPY api /app/api/
-COPY lib/tokenizer.pickle /app/lib/
-COPY lib/model /app/lib/model/
+COPY src/api /app/api/
+COPY src/lib/tokenizer.pickle /app/lib/
+COPY src/lib/model /app/lib/model/
 
 # Install the required libraries
 RUN pip install --no-cache-dir --upgrade -r /app/api/requirements_prod.txt

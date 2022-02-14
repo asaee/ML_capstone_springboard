@@ -35,7 +35,8 @@ class ProcessText:
         text = re.sub(pattern, '', text)
         return text
 
-    def expand_contractions(self, text, contraction_mapping):
+    def expand_contractions(self, text):
+        contraction_mapping = self.contractions
         contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())),
                                           flags=re.IGNORECASE | re.DOTALL)
 
