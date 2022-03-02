@@ -34,7 +34,7 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_REGION: us-east-2                   # set this to your preferred AWS region, e.g. us-west-1
+  AWS_REGION: us-east-1                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: article_label_app           # set this to your Amazon ECR repository name
   ECS_SERVICE: custom-service                 # set this to your Amazon ECS service name
   ECS_CLUSTER: MyTextLabelingApp                 # set this to your Amazon ECS cluster name
@@ -70,7 +70,7 @@ jobs:
       id: build-image
       env:
         ECR_REGISTRY: public.ecr.aws/w9u9k4o4
-        IMAGE_TAG: ${{ github.sha }}
+        IMAGE_TAG: latest
       run: |
         # Build a docker container and
         # push it to ECR so that it can
