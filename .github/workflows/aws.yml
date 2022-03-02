@@ -69,7 +69,7 @@ jobs:
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REGISTRY: public.ecr.aws/w9u9k4o4/article_label_app
         IMAGE_TAG: ${{ github.sha }}
       run: |
         # Build a docker container and
