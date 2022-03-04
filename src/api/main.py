@@ -5,6 +5,14 @@ from fastapi import FastAPI
 
 
 def load_model_tokenizer():
+    """Load and unpickle the saved tokenizer and the saved model
+
+    Returns
+    -------
+    tuple of:
+    Keras tokenizer object
+    keras model object
+    """
     path_tokenizer = "./lib/tokenizer.pickle"
     with open(path_tokenizer, 'rb') as handle:
         tokenizer = pickle.load(handle)
@@ -24,6 +32,17 @@ def load_model_tokenizer():
 
 
 def process_input_text(corpus, tokenizer, maxlen: int = 700):
+    """Process and tokenize the text
+    Parameters
+    ----------
+    corpus: list
+    tokenizer object
+    maxlen: int
+    Returns
+    -------
+    numpy.ndarray
+
+    """
     corpus = tokenizer.texts_to_sequences(corpus)
     corpus = pad_sequences(corpus, padding='post', maxlen=maxlen)
 
@@ -31,6 +50,15 @@ def process_input_text(corpus, tokenizer, maxlen: int = 700):
 
 
 def predict_label_prob(corpus, model_cnn):
+    """Multi-class classification using the CNN model
+    Parameters
+    ----------
+    corpus: numpy.ndarray
+    model_cnn: keras model object
+    Returns
+    -------
+    dict
+    """
     label_pred_prob = model_cnn.predict(corpus)
 
     return label_pred_prob
@@ -47,6 +75,14 @@ def read_root():
 
 @app.get("/article/")
 async def read_text(text: str):
+    """process requests to the api
+    Parameters
+    ----------
+    text: str
+    Returns
+    -------
+    list of dict
+    """
     corpus = process_input_text([text], TOKENIZER)
     label_prob = predict_label_prob(corpus, MODEL_CNN).tolist()
 
